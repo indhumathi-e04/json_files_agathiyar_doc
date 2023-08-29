@@ -1,0 +1,128 @@
+import 'dart:convert';
+
+import 'package:agathiyars_docket/model/month.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+class MonthlyCalendar extends StatefulWidget {
+  late int month;
+  MonthlyCalendar(this.month, {Key? key}) : super(key: key);
+
+  @override
+  _MonthlyCalendarState createState() => _MonthlyCalendarState();
+}
+
+class _MonthlyCalendarState extends State<MonthlyCalendar> {
+  List<MonthModel> _allMonth = [];
+  List<MonthModel> _currentMonth = [];
+  late int _todayDate;
+  late int _todayMonth;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      getCalendar(widget.month);
+      _todayDate = DateTime.now().day;
+      _todayMonth = DateTime.now().month;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return buildDate(context);
+  }
+
+  Widget buildDate(BuildContext context) {
+    return GridView.custom(
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 7,
+          childAspectRatio: (1 / 1),
+          crossAxisSpacing: MediaQuery.of(context).size.height * 0.00,
+          mainAxisSpacing: MediaQuery.of(context).size.height * 0.00,
+        ),
+        childrenDelegate: SliverChildListDelegate(
+          _currentMonth
+              .map(
+                (data) => GestureDetector(
+                    onTap: () {},
+                    child: Container(
+                      color: _todayDate == data.engDate.toInt() &&
+                              _todayMonth == data.engMonth.toInt()
+                          ? Colors.orange.shade300
+                          : Colors.lightBlue.shade300,
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      width: MediaQuery.of(context).size.height * 0.2,
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(data.tamDate != 0 ? data.tamDate.toString() : "",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontFamily: "Roboto",
+                                  fontSize: 11,
+                                  color: Colors.white),
+                              textAlign: TextAlign.center)
+                        ],
+                      ),
+                    )),
+              )
+              .toList(),
+        ));
+  }
+
+  getCalendar(int month) async {
+    final String response =
+        await rootBundle.loadString('assets/month_calendar.json');
+    final data = await json.decode(response);
+    setState(() {
+      _allMonth =
+          data.map<MonthModel>((json) => MonthModel.fromJson(json)).toList();
+
+      for (int i = 0; i < _allMonth.length; i++) {
+        if (_allMonth[i].engMonth == month) {
+          _currentMonth.add(_allMonth[i]);
+        }
+      }
+/*
+      if (_currentMonth[0].dayWeek == 2) {
+        _currentMonth.insert(0, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+      }
+      if (_currentMonth[0].dayWeek == 3) {
+        _currentMonth.insert(0, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+        _currentMonth.insert(1, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+      }
+      if (_currentMonth[0].dayWeek == 4) {
+        _currentMonth.insert(0, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+        _currentMonth.insert(1, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+        _currentMonth.insert(2, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+      }
+      if (_currentMonth[0].dayWeek == 5) {
+        _currentMonth.insert(0, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+        _currentMonth.insert(1, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+        _currentMonth.insert(2, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+        _currentMonth.insert(3, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+      }
+      if (_currentMonth[0].dayWeek == 6) {
+        _currentMonth.insert(0, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+        _currentMonth.insert(1, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+        _currentMonth.insert(2, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+        _currentMonth.insert(3, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+        _currentMonth.insert(4, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+      }
+      if (_currentMonth[0].dayWeek == 7) {
+        _currentMonth.insert(0, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+        _currentMonth.insert(1, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+        _currentMonth.insert(2, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+        _currentMonth.insert(3, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+        _currentMonth.insert(4, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+        _currentMonth.insert(5, MonthModel(0, 0, 0, "", 0, 0, 0, ""));
+      }
+*/
+    });
+  }
+}
