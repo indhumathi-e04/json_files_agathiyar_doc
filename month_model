@@ -1,0 +1,40 @@
+class MonthModel {
+  late int engDate;
+  late int engMonth;
+  late String engMonthString;
+  late int engYear;
+  late String engDay;
+  late int dayWeek;
+  late int tamDate;
+  late String tamMonth;
+  late String tamYear;
+
+  MonthModel(this.engDate, this.engMonth, this.engMonthString, this.engYear,
+      this.engDay, this.dayWeek, this.tamDate, this.tamMonth, this.tamYear);
+
+  MonthModel.fromJson(Map<String, dynamic> json) {
+    engDate = json['engDate'];
+    engMonth = json['engMonth'];
+    engMonthString = json['engMonthText'];
+    engYear = json['engYear'];
+    engDay = json['engDay'];
+    dayWeek = json['dayWeek'];
+    tamDate = json['tamDate'];
+    tamMonth = json['tamMonth'];
+    tamYear = json['tamYear'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['engDate'] = this.engDate;
+    data['engMonth'] = this.engMonth;
+    data['engMonthText'] = this.engMonthString;
+    data['engYear'] = this.engYear;
+    data['engDay'] = this.engDay;
+    data['dayWeek'] = this.dayWeek;
+    data['tamDate'] = this.tamDate;
+    data['tamMonth'] = this.tamMonth;
+    data['tamYear'] = this.tamYear;
+    return data;
+  }
+}
